@@ -1,0 +1,3 @@
+ccache_program_transform.patch
+ccache-rename.diff
+ccache-use-cppflags
