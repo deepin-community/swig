@@ -4,7 +4,7 @@
  * terms also apply to certain portions of SWIG. The full details of the SWIG
  * license and copyrights can be found in the LICENSE and COPYRIGHT files
  * included with the SWIG source code as distributed by the SWIG developers
- * and at http://www.swig.org/legal.html.
+ * and at https://www.swig.org/legal.html.
  *
  * cwrap.c
  *
@@ -14,6 +14,8 @@
 
 #include "swig.h"
 #include "cparse.h"
+
+extern int UseWrapperSuffix;
 
 static const char *cresult_variable_name = "result";
 
@@ -427,10 +429,14 @@ String *Swig_cfunction_call(const_String_or_char_ptr name, ParmList *parms) {
       String *rcaststr = SwigType_rcaststr(rpt, pname);
 
       if (comma) {
-	Printv(func, ",", rcaststr, NIL);
-      } else {
-	Append(func, rcaststr);
+	Append(func, ",");
       }
+
+      if (cparse_cplusplus && SwigType_type(rpt) == T_USER)
+	Printv(func, "SWIG_STD_MOVE(", rcaststr, ")", NIL);
+      else
+	Printv(func, rcaststr, NIL);
+
       Delete(rpt);
       Delete(pname);
       Delete(rcaststr);
@@ -632,7 +638,7 @@ String *Swig_cppconstructor_director_call(const_String_or_char_ptr name, ParmLis
  * If you define SWIG_FAST_REC_SEARCH, the method will set the found
  * 'attr' in the target class 'n'. If not, the method will set the
  * 'noattr' one. This prevents of having to navigate the entire
- * hierarchy tree everytime, so, it is an O(1) method...  or something
+ * hierarchy tree every time, so, it is an O(1) method...  or something
  * like that. However, it populates all the parsed classes with the
  * 'attr' and/or 'noattr' attributes.
  *
@@ -1076,9 +1082,18 @@ int Swig_MethodToFunction(Node *n, const_String_or_char_ptr nspace, String *clas
 
     /* Check if the method is overloaded.   If so, and it has code attached, we append an extra suffix
        to avoid a name-clash in the generated wrappers.  This allows overloaded methods to be defined
-       in C. */
-    if (Getattr(n, "sym:overloaded") && code) {
-      Append(mangled, Getattr(defaultargs ? defaultargs : n, "sym:overname"));
+       in C.
+
+       But when not using the suffix used for overloaded functions, we still need to ensure that the
+       wrapper name doesn't conflict with any wrapper functions for some languages, so optionally make
+       it sufficiently unique by appending a suffix similar to the one used for overloaded functions to it.
+     */
+    if (code) {
+      if (Getattr(n, "sym:overloaded")) {
+	Append(mangled, Getattr(defaultargs ? defaultargs : n, "sym:overname"));
+      } else if (UseWrapperSuffix) {
+	Append(mangled, "__SWIG");
+      }
     }
 
     /* See if there is any code that we need to emit */

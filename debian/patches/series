@@ -1,3 +1,6 @@
 ccache_program_transform.patch
 ccache-rename.diff
 ccache-use-cppflags
+substitute-libv8-dev-with-libnode-dev.patch
+0005-Revert-Use-PyObject-instead-of-PySliceObject-through.patch
+octave-8.1.patch

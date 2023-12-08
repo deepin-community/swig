@@ -28,7 +28,7 @@
 %define SWIGWARN_DEPRECATED_NAME          121 %enddef
 %define SWIGWARN_DEPRECATED_NOEXTERN      122 %enddef
 %define SWIGWARN_DEPRECATED_NODEFAULT     123 %enddef
-%define SWIGWARN_DEPRECATED_TYPEMAP_LANG  124 %enddef
+/* Unused since 4.1.0: #define WARN_DEPRECATED_TYPEMAP_LANG  124 */
 %define SWIGWARN_DEPRECATED_INPUT_FILE    125 %enddef
 %define SWIGWARN_DEPRECATED_NESTED_WORKAROUND 126 %enddef
 
@@ -69,6 +69,7 @@
 %define SWIGWARN_PARSE_NESTED_TEMPLATE    324 %enddef
 %define SWIGWARN_PARSE_NAMED_NESTED_CLASS 325 %enddef
 %define SWIGWARN_PARSE_EXTEND_NAME        326 %enddef
+%define SWIGWARN_PARSE_EXTERN_TEMPLATE    327 %enddef
 
 %define SWIGWARN_CPP11_LAMBDA             340 %enddef
 %define SWIGWARN_CPP11_ALIAS_DECLARATION  341 %enddef  /* redundant now */
@@ -122,8 +123,9 @@
 %define SWIGWARN_IGNORE_OPERATOR_NEWARR     394 %enddef	/* new [] */
 %define SWIGWARN_IGNORE_OPERATOR_DELARR     395 %enddef	/* delete [] */
 %define SWIGWARN_IGNORE_OPERATOR_REF        396 %enddef	/* operator *() */
+%define SWIGWARN_IGNORE_OPERATOR_LTEQUALGT  397 %enddef	/* <=> */
 
-/* 394-399 are reserved */
+/* please leave 350-399 free for WARN_IGNORE_OPERATOR_* */
 
 /* -- Type system and typemaps -- */
 
@@ -133,11 +135,12 @@
 %define SWIGWARN_TYPE_REDEFINED           404 %enddef
 %define SWIGWARN_TYPE_RVALUE_REF_QUALIFIER_IGNORED 405 %enddef
 
-%define SWIGWARN_TYPEMAP_SOURCETARGET     450 %enddef
+%define SWIGWARN_TYPEMAP_SOURCETARGET     450 %enddef /* No longer issued */
 %define SWIGWARN_TYPEMAP_CHARLEAK         451 %enddef
-%define SWIGWARN_TYPEMAP_SWIGTYPE         452 %enddef
+%define SWIGWARN_TYPEMAP_SWIGTYPE         452 %enddef /* No longer issued */
 %define SWIGWARN_TYPEMAP_APPLY_UNDEF      453 %enddef
 %define SWIGWARN_TYPEMAP_SWIGTYPELEAK     454 %enddef
+%define SWIGWARN_TYPEMAP_WCHARLEAK        455 %enddef
 
 %define SWIGWARN_TYPEMAP_IN_UNDEF         460 %enddef
 %define SWIGWARN_TYPEMAP_OUT_UNDEF        461 %enddef
@@ -188,6 +191,7 @@
 %define SWIGWARN_LANG_EXTEND_DESTRUCTOR   523 %enddef
 %define SWIGWARN_LANG_EXPERIMENTAL        524 %enddef
 %define SWIGWARN_LANG_DIRECTOR_FINAL      525 %enddef
+%define SWIGWARN_LANG_USING_NAME_DIFFERENT 526 %enddef
 
 /* -- Doxygen comments -- */
 
@@ -199,7 +203,7 @@
 %define SWIGWARN_DOXYGEN_UNKNOWN_CHARACTER        565 %enddef
 %define SWIGWARN_DOXYGEN_UNEXPECTED_ITERATOR_VALUE  566 %enddef
 
-/* -- Reserved (600-799) -- */
+/* -- Reserved (600-699) -- */
 
 /* -- Language module specific warnings (700 - 899) -- */
 
@@ -251,6 +255,7 @@
 %define SWIGWARN_JAVA_TYPEMAP_DIRECTORIN_NODESC   824 %enddef
 %define SWIGWARN_JAVA_NO_DIRECTORCONNECT_ATTR     825 %enddef
 %define SWIGWARN_JAVA_NSPACE_WITHOUT_PACKAGE      826 %enddef
+%define SWIGWARN_JAVA_TYPEMAP_INTERFACEMODIFIERS_UNDEF 827 %enddef
 
 /* please leave 810-829 free for Java */
 
@@ -271,22 +276,11 @@
 %define SWIGWARN_CSHARP_EXCODE                    844 %enddef
 %define SWIGWARN_CSHARP_CANTHROW                  845 %enddef
 %define SWIGWARN_CSHARP_NO_DIRECTORCONNECT_ATTR   846 %enddef
+%define SWIGWARN_CSHARP_TYPEMAP_INTERFACEMODIFIERS_UNDEF 847 %enddef
 
 /* please leave 830-849 free for C# */
 
-%define SWIGWARN_MODULA3_TYPEMAP_TYPE_UNDEF        850 %enddef
-%define SWIGWARN_MODULA3_TYPEMAP_GETCPTR_UNDEF     851 %enddef
-%define SWIGWARN_MODULA3_TYPEMAP_CLASSMOD_UNDEF    852 %enddef
-%define SWIGWARN_MODULA3_TYPEMAP_PTRCONSTMOD_UNDEF 853 %enddef
-%define SWIGWARN_MODULA3_TYPEMAP_MULTIPLE_RETURN   854 %enddef
-%define SWIGWARN_MODULA3_MULTIPLE_INHERITANCE      855 %enddef
-%define SWIGWARN_MODULA3_TYPECONSTRUCTOR_UNKNOWN   856 %enddef
-%define SWIGWARN_MODULA3_UNKNOWN_PRAGMA            857 %enddef
-%define SWIGWARN_MODULA3_BAD_ENUMERATION           858 %enddef
-%define SWIGWARN_MODULA3_DOUBLE_ID                 859 %enddef
-%define SWIGWARN_MODULA3_BAD_IMPORT                860 %enddef
-
-/* please leave 850-869 free for Modula 3 */
+/* 850-860 were used by Modula 3 (removed in SWIG 4.1.0) - avoid reusing for now */
 
 %define SWIGWARN_PHP_MULTIPLE_INHERITANCE         870 %enddef
 %define SWIGWARN_PHP_UNKNOWN_PRAGMA               871 %enddef

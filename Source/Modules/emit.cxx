@@ -4,7 +4,7 @@
  * terms also apply to certain portions of SWIG. The full details of the SWIG
  * license and copyrights can be found in the LICENSE and COPYRIGHT files
  * included with the SWIG source code as distributed by the SWIG developers
- * and at http://www.swig.org/legal.html.
+ * and at https://www.swig.org/legal.html.
  *
  * emit.cxx
  *
@@ -74,7 +74,6 @@ void emit_parameter_variables(ParmList *l, Wrapper *f) {
   while (p) {
     tm = Getattr(p, "tmap:arginit");
     if (tm) {
-      Replace(tm, "$target", Getattr(p, "lname"), DOH_REPLACE_ANY);
       Printv(f->code, tm, "\n", NIL);
       p = Getattr(p, "tmap:arginit:next");
     } else {
@@ -87,7 +86,6 @@ void emit_parameter_variables(ParmList *l, Wrapper *f) {
   while (p) {
     tm = Getattr(p, "tmap:default");
     if (tm) {
-      Replace(tm, "$target", Getattr(p, "lname"), DOH_REPLACE_ANY);
       Printv(f->code, tm, "\n", NIL);
       p = Getattr(p, "tmap:default:next");
     } else {
@@ -116,7 +114,6 @@ void emit_attach_parmmaps(ParmList *l, Wrapper *f) {
     while (p) {
       String *tm = Getattr(p, "tmap:in");
       if (tm && checkAttribute(p, "tmap:in:numinputs", "0")) {
-	Replaceall(tm, "$target", Getattr(p, "lname"));
 	Printv(f->code, tm, "\n", NIL);
 	np = Getattr(p, "tmap:in:next");
 	while (p && (p != np)) {

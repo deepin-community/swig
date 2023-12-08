@@ -4,7 +4,7 @@
  * terms also apply to certain portions of SWIG. The full details of the SWIG
  * license and copyrights can be found in the LICENSE and COPYRIGHT files
  * included with the SWIG source code as distributed by the SWIG developers
- * and at http://www.swig.org/legal.html.
+ * and at https://www.swig.org/legal.html.
  *
  * overload.cxx
  *
@@ -21,6 +21,7 @@
 String *argv_template_string;
 String *argc_template_string;
 
+namespace {
 struct Overloaded {
   Node *n;			/* Node                               */
   int argc;			/* Argument count                     */
@@ -28,6 +29,7 @@ struct Overloaded {
   int error;			/* Ambiguity error                    */
   bool implicitconv_function;	/* For ordering implicitconv functions*/
 };
+}
 
 static int fast_dispatch_mode = 0;
 static int cast_dispatch_mode = 0;
@@ -337,7 +339,6 @@ List *Swig_overload_rank(Node *n, bool script_lang_wrapping) {
 	Setattr(nodes[i].n, "overload:ignore", "1");
       Append(result, nodes[i].n);
       // Printf(stdout,"[ %d ] %d    %s\n", i, nodes[i].implicitconv_function, ParmList_errorstr(nodes[i].parms));
-      // Swig_print_node(nodes[i].n);
       if (i == nnodes-1 || nodes[i].argc != nodes[i+1].argc) {
 	if (argc_changed_index+2 < nnodes && (nodes[argc_changed_index+1].argc == nodes[argc_changed_index+2].argc)) {
 	  // Add additional implicitconv functions in same order as already ranked.
@@ -349,7 +350,6 @@ List *Swig_overload_rank(Node *n, bool script_lang_wrapping) {
 	      SetFlag(nodes[j].n, "implicitconvtypecheckoff");
 	      Append(result, nodes[j].n);
 	      // Printf(stdout,"[ %d ] %d +  %s\n", j, nodes[j].implicitconv_function, ParmList_errorstr(nodes[j].parms));
-	      // Swig_print_node(nodes[j].n);
 	    }
 	  }
 	}
@@ -809,7 +809,7 @@ String *Swig_overload_dispatch(Node *n, const_String_or_char_ptr fmt, int *maxar
     }
 
     if (num_arguments) {
-      Printf(f, "int _v;\n");
+      Printf(f, "int _v = 0;\n");
     }
 
     int num_braces = 0;

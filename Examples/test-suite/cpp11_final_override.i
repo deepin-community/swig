@@ -27,7 +27,7 @@ struct Base {
   virtual ~Base() {}
 };
 
-struct Derived /*final*/ : Base {
+struct Derived final : Base {
   virtual void stuff() const noexcept override final {}
   virtual void override1() const noexcept override;
   virtual void override2() const noexcept override;
@@ -90,7 +90,7 @@ struct FinalOverrideMethods {
     virtual void override(int) {}
     virtual ~FinalOverrideMethods() = default;
 };
-struct FinalOverrideVariables {
+struct FinalOverrideVars {
     int final;
     double override;
 };

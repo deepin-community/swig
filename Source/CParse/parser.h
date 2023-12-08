@@ -1,8 +1,9 @@
-/* A Bison parser, made by GNU Bison 3.0.4.  */
+/* A Bison parser, made by GNU Bison 3.8.2.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2021 Free Software Foundation,
+   Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -15,7 +16,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
+   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 /* As a special exception, you may create a larger work that contains
    part or all of the Bison parser skeleton and distribute that work
@@ -30,6 +31,10 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
+/* DO NOT RELY ON FEATURES THAT ARE NOT DOCUMENTED in the manual,
+   especially those whose name start with YY_ or yy_.  They are
+   private implementation details that can be changed or removed.  */
+
 #ifndef YY_YY_Y_TAB_H_INCLUDED
 # define YY_YY_Y_TAB_H_INCLUDED
 /* Debug traces.  */
@@ -40,154 +45,165 @@
 extern int yydebug;
 #endif
 
-/* Token type.  */
+/* Token kinds.  */
 #ifndef YYTOKENTYPE
 # define YYTOKENTYPE
   enum yytokentype
   {
-    ID = 258,
-    HBLOCK = 259,
-    POUND = 260,
-    STRING = 261,
-    WSTRING = 262,
-    INCLUDE = 263,
-    IMPORT = 264,
-    INSERT = 265,
-    CHARCONST = 266,
-    WCHARCONST = 267,
-    NUM_INT = 268,
-    NUM_FLOAT = 269,
-    NUM_UNSIGNED = 270,
-    NUM_LONG = 271,
-    NUM_ULONG = 272,
-    NUM_LONGLONG = 273,
-    NUM_ULONGLONG = 274,
-    NUM_BOOL = 275,
-    TYPEDEF = 276,
-    TYPE_INT = 277,
-    TYPE_UNSIGNED = 278,
-    TYPE_SHORT = 279,
-    TYPE_LONG = 280,
-    TYPE_FLOAT = 281,
-    TYPE_DOUBLE = 282,
-    TYPE_CHAR = 283,
-    TYPE_WCHAR = 284,
-    TYPE_VOID = 285,
-    TYPE_SIGNED = 286,
-    TYPE_BOOL = 287,
-    TYPE_COMPLEX = 288,
-    TYPE_TYPEDEF = 289,
-    TYPE_RAW = 290,
-    TYPE_NON_ISO_INT8 = 291,
-    TYPE_NON_ISO_INT16 = 292,
-    TYPE_NON_ISO_INT32 = 293,
-    TYPE_NON_ISO_INT64 = 294,
-    LPAREN = 295,
-    RPAREN = 296,
-    COMMA = 297,
-    SEMI = 298,
-    EXTERN = 299,
-    INIT = 300,
-    LBRACE = 301,
-    RBRACE = 302,
-    PERIOD = 303,
-    CONST_QUAL = 304,
-    VOLATILE = 305,
-    REGISTER = 306,
-    STRUCT = 307,
-    UNION = 308,
-    EQUAL = 309,
-    SIZEOF = 310,
-    MODULE = 311,
-    LBRACKET = 312,
-    RBRACKET = 313,
-    BEGINFILE = 314,
-    ENDOFFILE = 315,
-    ILLEGAL = 316,
-    CONSTANT = 317,
-    NAME = 318,
-    RENAME = 319,
-    NAMEWARN = 320,
-    EXTEND = 321,
-    PRAGMA = 322,
-    FEATURE = 323,
-    VARARGS = 324,
-    ENUM = 325,
-    CLASS = 326,
-    TYPENAME = 327,
-    PRIVATE = 328,
-    PUBLIC = 329,
-    PROTECTED = 330,
-    COLON = 331,
-    STATIC = 332,
-    VIRTUAL = 333,
-    FRIEND = 334,
-    THROW = 335,
-    CATCH = 336,
-    EXPLICIT = 337,
-    STATIC_ASSERT = 338,
-    CONSTEXPR = 339,
-    THREAD_LOCAL = 340,
-    DECLTYPE = 341,
-    AUTO = 342,
-    NOEXCEPT = 343,
-    OVERRIDE = 344,
-    FINAL = 345,
-    USING = 346,
-    NAMESPACE = 347,
-    NATIVE = 348,
-    INLINE = 349,
-    TYPEMAP = 350,
-    EXCEPT = 351,
-    ECHO = 352,
-    APPLY = 353,
-    CLEAR = 354,
-    SWIGTEMPLATE = 355,
-    FRAGMENT = 356,
-    WARN = 357,
-    LESSTHAN = 358,
-    GREATERTHAN = 359,
-    DELETE_KW = 360,
-    DEFAULT = 361,
-    LESSTHANOREQUALTO = 362,
-    GREATERTHANOREQUALTO = 363,
-    EQUALTO = 364,
-    NOTEQUALTO = 365,
-    ARROW = 366,
-    QUESTIONMARK = 367,
-    TYPES = 368,
-    PARMS = 369,
-    NONID = 370,
-    DSTAR = 371,
-    DCNOT = 372,
-    TEMPLATE = 373,
-    OPERATOR = 374,
-    CONVERSIONOPERATOR = 375,
-    PARSETYPE = 376,
-    PARSEPARM = 377,
-    PARSEPARMS = 378,
-    DOXYGENSTRING = 379,
-    DOXYGENPOSTSTRING = 380,
-    CAST = 381,
-    LOR = 382,
-    LAND = 383,
-    OR = 384,
-    XOR = 385,
-    AND = 386,
-    LSHIFT = 387,
-    RSHIFT = 388,
-    PLUS = 389,
-    MINUS = 390,
-    STAR = 391,
-    SLASH = 392,
-    MODULO = 393,
-    UMINUS = 394,
-    NOT = 395,
-    LNOT = 396,
-    DCOLON = 397
+    YYEMPTY = -2,
+    END = 0,                       /* END  */
+    YYerror = 256,                 /* error  */
+    YYUNDEF = 257,                 /* "invalid token"  */
+    ID = 258,                      /* ID  */
+    HBLOCK = 259,                  /* HBLOCK  */
+    POUND = 260,                   /* POUND  */
+    STRING = 261,                  /* STRING  */
+    WSTRING = 262,                 /* WSTRING  */
+    INCLUDE = 263,                 /* INCLUDE  */
+    IMPORT = 264,                  /* IMPORT  */
+    INSERT = 265,                  /* INSERT  */
+    CHARCONST = 266,               /* CHARCONST  */
+    WCHARCONST = 267,              /* WCHARCONST  */
+    NUM_INT = 268,                 /* NUM_INT  */
+    NUM_FLOAT = 269,               /* NUM_FLOAT  */
+    NUM_UNSIGNED = 270,            /* NUM_UNSIGNED  */
+    NUM_LONG = 271,                /* NUM_LONG  */
+    NUM_ULONG = 272,               /* NUM_ULONG  */
+    NUM_LONGLONG = 273,            /* NUM_LONGLONG  */
+    NUM_ULONGLONG = 274,           /* NUM_ULONGLONG  */
+    NUM_BOOL = 275,                /* NUM_BOOL  */
+    TYPEDEF = 276,                 /* TYPEDEF  */
+    TYPE_INT = 277,                /* TYPE_INT  */
+    TYPE_UNSIGNED = 278,           /* TYPE_UNSIGNED  */
+    TYPE_SHORT = 279,              /* TYPE_SHORT  */
+    TYPE_LONG = 280,               /* TYPE_LONG  */
+    TYPE_FLOAT = 281,              /* TYPE_FLOAT  */
+    TYPE_DOUBLE = 282,             /* TYPE_DOUBLE  */
+    TYPE_CHAR = 283,               /* TYPE_CHAR  */
+    TYPE_WCHAR = 284,              /* TYPE_WCHAR  */
+    TYPE_VOID = 285,               /* TYPE_VOID  */
+    TYPE_SIGNED = 286,             /* TYPE_SIGNED  */
+    TYPE_BOOL = 287,               /* TYPE_BOOL  */
+    TYPE_COMPLEX = 288,            /* TYPE_COMPLEX  */
+    TYPE_TYPEDEF = 289,            /* TYPE_TYPEDEF  */
+    TYPE_RAW = 290,                /* TYPE_RAW  */
+    TYPE_NON_ISO_INT8 = 291,       /* TYPE_NON_ISO_INT8  */
+    TYPE_NON_ISO_INT16 = 292,      /* TYPE_NON_ISO_INT16  */
+    TYPE_NON_ISO_INT32 = 293,      /* TYPE_NON_ISO_INT32  */
+    TYPE_NON_ISO_INT64 = 294,      /* TYPE_NON_ISO_INT64  */
+    LPAREN = 295,                  /* LPAREN  */
+    RPAREN = 296,                  /* RPAREN  */
+    COMMA = 297,                   /* COMMA  */
+    SEMI = 298,                    /* SEMI  */
+    EXTERN = 299,                  /* EXTERN  */
+    INIT = 300,                    /* INIT  */
+    LBRACE = 301,                  /* LBRACE  */
+    RBRACE = 302,                  /* RBRACE  */
+    PERIOD = 303,                  /* PERIOD  */
+    ELLIPSIS = 304,                /* ELLIPSIS  */
+    CONST_QUAL = 305,              /* CONST_QUAL  */
+    VOLATILE = 306,                /* VOLATILE  */
+    REGISTER = 307,                /* REGISTER  */
+    STRUCT = 308,                  /* STRUCT  */
+    UNION = 309,                   /* UNION  */
+    EQUAL = 310,                   /* EQUAL  */
+    SIZEOF = 311,                  /* SIZEOF  */
+    MODULE = 312,                  /* MODULE  */
+    LBRACKET = 313,                /* LBRACKET  */
+    RBRACKET = 314,                /* RBRACKET  */
+    BEGINFILE = 315,               /* BEGINFILE  */
+    ENDOFFILE = 316,               /* ENDOFFILE  */
+    ILLEGAL = 317,                 /* ILLEGAL  */
+    CONSTANT = 318,                /* CONSTANT  */
+    NAME = 319,                    /* NAME  */
+    RENAME = 320,                  /* RENAME  */
+    NAMEWARN = 321,                /* NAMEWARN  */
+    EXTEND = 322,                  /* EXTEND  */
+    PRAGMA = 323,                  /* PRAGMA  */
+    FEATURE = 324,                 /* FEATURE  */
+    VARARGS = 325,                 /* VARARGS  */
+    ENUM = 326,                    /* ENUM  */
+    CLASS = 327,                   /* CLASS  */
+    TYPENAME = 328,                /* TYPENAME  */
+    PRIVATE = 329,                 /* PRIVATE  */
+    PUBLIC = 330,                  /* PUBLIC  */
+    PROTECTED = 331,               /* PROTECTED  */
+    COLON = 332,                   /* COLON  */
+    STATIC = 333,                  /* STATIC  */
+    VIRTUAL = 334,                 /* VIRTUAL  */
+    FRIEND = 335,                  /* FRIEND  */
+    THROW = 336,                   /* THROW  */
+    CATCH = 337,                   /* CATCH  */
+    EXPLICIT = 338,                /* EXPLICIT  */
+    STATIC_ASSERT = 339,           /* STATIC_ASSERT  */
+    CONSTEXPR = 340,               /* CONSTEXPR  */
+    THREAD_LOCAL = 341,            /* THREAD_LOCAL  */
+    DECLTYPE = 342,                /* DECLTYPE  */
+    AUTO = 343,                    /* AUTO  */
+    NOEXCEPT = 344,                /* NOEXCEPT  */
+    OVERRIDE = 345,                /* OVERRIDE  */
+    FINAL = 346,                   /* FINAL  */
+    USING = 347,                   /* USING  */
+    NAMESPACE = 348,               /* NAMESPACE  */
+    NATIVE = 349,                  /* NATIVE  */
+    INLINE = 350,                  /* INLINE  */
+    TYPEMAP = 351,                 /* TYPEMAP  */
+    EXCEPT = 352,                  /* EXCEPT  */
+    ECHO = 353,                    /* ECHO  */
+    APPLY = 354,                   /* APPLY  */
+    CLEAR = 355,                   /* CLEAR  */
+    SWIGTEMPLATE = 356,            /* SWIGTEMPLATE  */
+    FRAGMENT = 357,                /* FRAGMENT  */
+    WARN = 358,                    /* WARN  */
+    LESSTHAN = 359,                /* LESSTHAN  */
+    GREATERTHAN = 360,             /* GREATERTHAN  */
+    DELETE_KW = 361,               /* DELETE_KW  */
+    DEFAULT = 362,                 /* DEFAULT  */
+    LESSTHANOREQUALTO = 363,       /* LESSTHANOREQUALTO  */
+    GREATERTHANOREQUALTO = 364,    /* GREATERTHANOREQUALTO  */
+    EQUALTO = 365,                 /* EQUALTO  */
+    NOTEQUALTO = 366,              /* NOTEQUALTO  */
+    LESSEQUALGREATER = 367,        /* LESSEQUALGREATER  */
+    ARROW = 368,                   /* ARROW  */
+    QUESTIONMARK = 369,            /* QUESTIONMARK  */
+    TYPES = 370,                   /* TYPES  */
+    PARMS = 371,                   /* PARMS  */
+    NONID = 372,                   /* NONID  */
+    DSTAR = 373,                   /* DSTAR  */
+    DCNOT = 374,                   /* DCNOT  */
+    TEMPLATE = 375,                /* TEMPLATE  */
+    OPERATOR = 376,                /* OPERATOR  */
+    CONVERSIONOPERATOR = 377,      /* CONVERSIONOPERATOR  */
+    PARSETYPE = 378,               /* PARSETYPE  */
+    PARSEPARM = 379,               /* PARSEPARM  */
+    PARSEPARMS = 380,              /* PARSEPARMS  */
+    DOXYGENSTRING = 381,           /* DOXYGENSTRING  */
+    DOXYGENPOSTSTRING = 382,       /* DOXYGENPOSTSTRING  */
+    CAST = 383,                    /* CAST  */
+    LOR = 384,                     /* LOR  */
+    LAND = 385,                    /* LAND  */
+    OR = 386,                      /* OR  */
+    XOR = 387,                     /* XOR  */
+    AND = 388,                     /* AND  */
+    LSHIFT = 389,                  /* LSHIFT  */
+    RSHIFT = 390,                  /* RSHIFT  */
+    PLUS = 391,                    /* PLUS  */
+    MINUS = 392,                   /* MINUS  */
+    STAR = 393,                    /* STAR  */
+    SLASH = 394,                   /* SLASH  */
+    MODULO = 395,                  /* MODULO  */
+    UMINUS = 396,                  /* UMINUS  */
+    NOT = 397,                     /* NOT  */
+    LNOT = 398,                    /* LNOT  */
+    DCOLON = 399                   /* DCOLON  */
   };
+  typedef enum yytokentype yytoken_kind_t;
 #endif
-/* Tokens.  */
+/* Token kinds.  */
+#define YYEMPTY -2
+#define END 0
+#define YYerror 256
+#define YYUNDEF 257
 #define ID 258
 #define HBLOCK 259
 #define POUND 260
@@ -234,107 +250,108 @@ extern int yydebug;
 #define LBRACE 301
 #define RBRACE 302
 #define PERIOD 303
-#define CONST_QUAL 304
-#define VOLATILE 305
-#define REGISTER 306
-#define STRUCT 307
-#define UNION 308
-#define EQUAL 309
-#define SIZEOF 310
-#define MODULE 311
-#define LBRACKET 312
-#define RBRACKET 313
-#define BEGINFILE 314
-#define ENDOFFILE 315
-#define ILLEGAL 316
-#define CONSTANT 317
-#define NAME 318
-#define RENAME 319
-#define NAMEWARN 320
-#define EXTEND 321
-#define PRAGMA 322
-#define FEATURE 323
-#define VARARGS 324
-#define ENUM 325
-#define CLASS 326
-#define TYPENAME 327
-#define PRIVATE 328
-#define PUBLIC 329
-#define PROTECTED 330
-#define COLON 331
-#define STATIC 332
-#define VIRTUAL 333
-#define FRIEND 334
-#define THROW 335
-#define CATCH 336
-#define EXPLICIT 337
-#define STATIC_ASSERT 338
-#define CONSTEXPR 339
-#define THREAD_LOCAL 340
-#define DECLTYPE 341
-#define AUTO 342
-#define NOEXCEPT 343
-#define OVERRIDE 344
-#define FINAL 345
-#define USING 346
-#define NAMESPACE 347
-#define NATIVE 348
-#define INLINE 349
-#define TYPEMAP 350
-#define EXCEPT 351
-#define ECHO 352
-#define APPLY 353
-#define CLEAR 354
-#define SWIGTEMPLATE 355
-#define FRAGMENT 356
-#define WARN 357
-#define LESSTHAN 358
-#define GREATERTHAN 359
-#define DELETE_KW 360
-#define DEFAULT 361
-#define LESSTHANOREQUALTO 362
-#define GREATERTHANOREQUALTO 363
-#define EQUALTO 364
-#define NOTEQUALTO 365
-#define ARROW 366
-#define QUESTIONMARK 367
-#define TYPES 368
-#define PARMS 369
-#define NONID 370
-#define DSTAR 371
-#define DCNOT 372
-#define TEMPLATE 373
-#define OPERATOR 374
-#define CONVERSIONOPERATOR 375
-#define PARSETYPE 376
-#define PARSEPARM 377
-#define PARSEPARMS 378
-#define DOXYGENSTRING 379
-#define DOXYGENPOSTSTRING 380
-#define CAST 381
-#define LOR 382
-#define LAND 383
-#define OR 384
-#define XOR 385
-#define AND 386
-#define LSHIFT 387
-#define RSHIFT 388
-#define PLUS 389
-#define MINUS 390
-#define STAR 391
-#define SLASH 392
-#define MODULO 393
-#define UMINUS 394
-#define NOT 395
-#define LNOT 396
-#define DCOLON 397
+#define ELLIPSIS 304
+#define CONST_QUAL 305
+#define VOLATILE 306
+#define REGISTER 307
+#define STRUCT 308
+#define UNION 309
+#define EQUAL 310
+#define SIZEOF 311
+#define MODULE 312
+#define LBRACKET 313
+#define RBRACKET 314
+#define BEGINFILE 315
+#define ENDOFFILE 316
+#define ILLEGAL 317
+#define CONSTANT 318
+#define NAME 319
+#define RENAME 320
+#define NAMEWARN 321
+#define EXTEND 322
+#define PRAGMA 323
+#define FEATURE 324
+#define VARARGS 325
+#define ENUM 326
+#define CLASS 327
+#define TYPENAME 328
+#define PRIVATE 329
+#define PUBLIC 330
+#define PROTECTED 331
+#define COLON 332
+#define STATIC 333
+#define VIRTUAL 334
+#define FRIEND 335
+#define THROW 336
+#define CATCH 337
+#define EXPLICIT 338
+#define STATIC_ASSERT 339
+#define CONSTEXPR 340
+#define THREAD_LOCAL 341
+#define DECLTYPE 342
+#define AUTO 343
+#define NOEXCEPT 344
+#define OVERRIDE 345
+#define FINAL 346
+#define USING 347
+#define NAMESPACE 348
+#define NATIVE 349
+#define INLINE 350
+#define TYPEMAP 351
+#define EXCEPT 352
+#define ECHO 353
+#define APPLY 354
+#define CLEAR 355
+#define SWIGTEMPLATE 356
+#define FRAGMENT 357
+#define WARN 358
+#define LESSTHAN 359
+#define GREATERTHAN 360
+#define DELETE_KW 361
+#define DEFAULT 362
+#define LESSTHANOREQUALTO 363
+#define GREATERTHANOREQUALTO 364
+#define EQUALTO 365
+#define NOTEQUALTO 366
+#define LESSEQUALGREATER 367
+#define ARROW 368
+#define QUESTIONMARK 369
+#define TYPES 370
+#define PARMS 371
+#define NONID 372
+#define DSTAR 373
+#define DCNOT 374
+#define TEMPLATE 375
+#define OPERATOR 376
+#define CONVERSIONOPERATOR 377
+#define PARSETYPE 378
+#define PARSEPARM 379
+#define PARSEPARMS 380
+#define DOXYGENSTRING 381
+#define DOXYGENPOSTSTRING 382
+#define CAST 383
+#define LOR 384
+#define LAND 385
+#define OR 386
+#define XOR 387
+#define AND 388
+#define LSHIFT 389
+#define RSHIFT 390
+#define PLUS 391
+#define MINUS 392
+#define STAR 393
+#define SLASH 394
+#define MODULO 395
+#define UMINUS 396
+#define NOT 397
+#define LNOT 398
+#define DCOLON 399
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-
 union YYSTYPE
 {
-#line 1542 "parser.y" /* yacc.c:1909  */
+#line 1554 "parser.y"
 
   const char  *id;
   List  *bases;
@@ -382,9 +399,9 @@ union YYSTYPE
   int           intvalue;
   Node         *node;
 
-#line 386 "y.tab.h" /* yacc.c:1909  */
-};
+#line 403 "y.tab.h"
 
+};
 typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
@@ -393,6 +410,8 @@ typedef union YYSTYPE YYSTYPE;
 
 extern YYSTYPE yylval;
 
+
 int yyparse (void);
+
 
 #endif /* !YY_YY_Y_TAB_H_INCLUDED  */

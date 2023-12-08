@@ -1,3 +1,46 @@
+swig (4.1.0-0.3) unstable; urgency=medium
+
+  * Non-maintainer upload
+  * Update octave files to work with Octave v8 (Closes: #1035684)
+
+ -- Rafael Laboissière <rafael@debian.org>  Thu, 15 Jun 2023 02:06:37 -0300
+
+swig (4.1.0-0.2) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Revert upstream patch for Py_LIMITED_API (Closes: #1024555)
+
+ -- Jochen Sprickerhof <jspricke@debian.org>  Sat, 17 Dec 2022 09:11:55 +0100
+
+swig (4.1.0-0.1) unstable; urgency=medium
+
+  * Non-maintainer upload
+  * d/copyright: Represent actual source URL
+  * Mangle pre-release versions for correct ordering
+  * New upstream version 4.1.0 (Closes: #1003479)
+  * Drop upstream patches
+
+  [ Debian Janitor ]
+  * Apply multi-arch hints. + swig4.0-examples: Add Multi-Arch: foreign.
+
+ -- Bastian Germann <bage@debian.org>  Mon, 31 Oct 2022 13:05:40 +0100
+
+swig (4.0.2-2) unstable; urgency=medium
+
+  [ Salman Mohammadi ]
+  * Update documentation to reference libnode-dev instead of libv8-dev.
+    The latter is a virtual package provided by libnode-dev.
+
+  [ Jan Kiszka ]
+  * Make swig compatible with Node 12 by applying 4 relevant upstream
+    commits (closes: #990361).
+
+  [ Torsten Landschoff ]
+  * Apply upstream patch for using PCRE2 instead of the legacy PCRE
+    library (closes: #999948).
+
+ -- Torsten Landschoff <torsten@debian.org>  Sat, 05 Feb 2022 23:46:44 +0100
+
 swig (4.0.2-1) unstable; urgency=medium
 
   * New upstream release 4.0.2.
