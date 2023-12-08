@@ -4,7 +4,7 @@
  * terms also apply to certain portions of SWIG. The full details of the SWIG
  * license and copyrights can be found in the LICENSE and COPYRIGHT files
  * included with the SWIG source code as distributed by the SWIG developers
- * and at http://www.swig.org/legal.html.
+ * and at https://www.swig.org/legal.html.
  *
  * fragment.c
  *
@@ -29,7 +29,7 @@ static int debug = 0;
  * Swig_fragment_register()
  *
  * Add a fragment. Use the original Node*, so, if something needs to be
- * changed, lang.cxx doesn't nedd to be touched again.
+ * changed, lang.cxx doesn't need to be touched again.
  * ----------------------------------------------------------------------------- */
 
 void Swig_fragment_register(Node *fragment) {

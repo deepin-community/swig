@@ -2,15 +2,7 @@ The swig package was assembled by Klee Dienes <klee@debian.org>
 and later maintained by Gregor Hoffleit. The current maintainer is
 Torsten Landschoff <torsten@debian.org>.
 
-The sources were obtained from 
-
-	ftp://ftp.swig.org/pub/
-
-and as you might have guessed the homepage is at
-
-	http://www.swig.org/
-
- -- Torsten Landschoff <torsten@debian.org>  Wed, 11 Aug 2010 22:44:57 +0200
+Source: https://sourceforge.net/projects/swig/files/swig/
 
 
 SWIG is free software: you can redistribute it and/or modify it

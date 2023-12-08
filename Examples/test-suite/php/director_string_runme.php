@@ -1,16 +1,17 @@
 <?php
 
 require "tests.php";
-require "director_string.php";
 
 // No new functions
-check::functions(array('a_get_first','a_call_get_first','a_string_length','a_process_text','a_call_process_func','stringvector_size','stringvector_is_empty','stringvector_clear','stringvector_push','stringvector_pop','stringvector_capacity','stringvector_reserve'));
-// No new classes
+check::functions(array());
+// New classes
 check::classes(array('A','StringVector'));
-// now new vars
-check::globals(array('a','a_call','a_m_strings','stringvector'));
+// No new vars
+check::globals(array());
 
 class B extends A {
+  public $smem;
+
   function get_first() {
     return parent::get_first() . " world!";
   }
@@ -31,4 +32,3 @@ $b->call_process_func();
 check::equal($b->smem, "hello", "smem failed");
 
 check::done();
-?>

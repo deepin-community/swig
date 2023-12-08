@@ -4,15 +4,15 @@
  * terms also apply to certain portions of SWIG. The full details of the SWIG
  * license and copyrights can be found in the LICENSE and COPYRIGHT files
  * included with the SWIG source code as distributed by the SWIG developers
- * and at http://www.swig.org/legal.html.
+ * and at https://www.swig.org/legal.html.
  *
  * cparse.h
  *
  * SWIG parser module.
  * ----------------------------------------------------------------------------- */
 
-#ifndef SWIG_CPARSE_H_
-#define SWIG_CPARSE_H_
+#ifndef SWIG_CPARSE_H
+#define SWIG_CPARSE_H
 
 #include "swig.h"
 #include "swigwarn.h"
@@ -43,7 +43,7 @@ extern "C" {
   extern void scanner_clear_rename(void);
   extern void scanner_set_location(String *file, int line);
   extern void scanner_set_main_input_file(String *file);
-  extern String *scanner_get_main_input_file();
+  extern String *scanner_get_main_input_file(void);
   extern void Swig_cparse_follow_locators(int);
   extern void start_inline(char *, int);
   extern String *scanner_ccode;
