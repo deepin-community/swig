@@ -2,59 +2,37 @@ Source: swig
 Section: interpreters
 Priority: optional
 Maintainer: Torsten Landschoff <torsten@debian.org>
-Standards-Version: 4.5.0
+Uploaders: Rafael Laboissière <rafael@debian.org>
+Standards-Version: 4.6.2
 Vcs-Git: https://salsa.debian.org/debian/swig.git
 Vcs-Browser: https://salsa.debian.org/debian/swig
-Homepage: http://www.swig.org/
+Homepage: https://www.swig.org/
 Build-Depends: dpkg-dev (>= 1.16.1~),
                bison,
                debhelper (>= 10~),
-               debhelper-compat (= 10),
+               debhelper-compat (= 13),
                libpcre2-dev
 
 Package: swig
-Architecture: all
-Depends: swig4.0 (>= ${source:Version}), ${misc:Depends}
-Multi-Arch: foreign
-Suggests: swig-doc, swig-examples
-Conflicts: swig2.0
-Replaces: swig2.0
-Description: Generate scripting interfaces to C/C++ code
- SWIG is a compiler that makes it easy to integrate C and C++ code
- with other languages including Perl, Tcl, Ruby, Python, Java,
- Guile, Mzscheme, Chicken, OCaml, Pike, and C#.
- .
- Swig takes a set of ANSI C/C++ declarations and generates an
- interface for them to your favorite scripting language.
- .
- This is a dependency package providing the stable version of SWIG.
-
-Package: swig4.0
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Multi-Arch: foreign
-Suggests: swig4.0-examples, swig4.0-doc
+Suggests: swig-doc, swig-examples
+Conflicts: swig4.0
+Replaces: swig4.0
 Description: Generate scripting interfaces to C/C++ code
  SWIG is a compiler that makes it easy to integrate C and C++ code
- with other languages including Perl, Tcl, Ruby, Python, Java, 
- Guile, Mzscheme, Chicken, OCaml, Pike, and C#.
+ with these languages: C#, D, Go, Guile, Java, JavaScript, Lua,
+ Mzscheme, OCaml, Octave, Perl, PHP, Python, R, Ruby, Scilab, and Tcl.
  .
- Swig takes a set of ANSI C/C++ declarations and generates an 
+ Swig takes a set of ANSI C/C++ declarations and generates an
  interface for them to your favorite scripting language.
 
 Package: swig-examples
 Architecture: all
-Depends: swig4.0-examples (>= 3.0.0-1), ${misc:Depends}
-Conflicts: swig2.0-examples
-Replaces: swig2.0-examples
-Description: Examples for applications of SWIG
- This is a dependency package providing the examples of the default
- version of SWIG in Debian.
-
-Package: swig4.0-examples
-Architecture: all
-Depends: swig4.0, ${misc:Depends}
-Multi-Arch: foreign
+Depends: ${misc:Depends}
+Conflicts: swig4.0-examples
+Replaces: swig4.0-examples
 Description: Examples for applications of SWIG
  Contains examples for applications of SWIG, a wrapper interface
  generator to integrate C code into scripting languages.
@@ -62,19 +40,10 @@ Description: Examples for applications of SWIG
 Package: swig-doc
 Architecture: all
 Multi-Arch: foreign
-Depends: swig4.0-doc (>= 3.0.0-1), ${misc:Depends}
-Section: doc
-Conflicts: swig2.0-doc
-Replaces: swig2.0-doc
-Description: HTML documentation for SWIG
- This is a dependency package providing the documentation of the default
- version of SWIG in Debian.
-
-Package: swig4.0-doc
-Architecture: all
-Multi-Arch: foreign
-Section: doc
 Depends: ${misc:Depends}
+Section: doc
+Conflicts: swig4.0-doc
+Replaces: swig4.0-doc
 Description: HTML documentation for SWIG
- Contains the users' and developers' manuals for SWIG (Simplified 
- Wrapper Interface Generator) 2.0 in HTML format.
+ Contains the users' and developers' manuals for SWIG (Simplified
+ Wrapper Interface Generator) in HTML format.

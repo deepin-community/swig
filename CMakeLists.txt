@@ -1,8 +1,6 @@
-cmake_minimum_required (VERSION 3.2)
+cmake_minimum_required (VERSION 3.13)
 
-if (NOT DEFINED CMAKE_BUILD_TYPE)
-  set (CMAKE_BUILD_TYPE Release CACHE STRING "Build type")
-endif ()
+set (CMAKE_BUILD_TYPE Release CACHE STRING "Build type")
 
 project (swig)
 
@@ -20,8 +18,11 @@ endif ()
 
 set (SWIG_ROOT ${PROJECT_SOURCE_DIR})
 
-set (SWIG_LIB share/swig/${SWIG_VERSION})
-
+if (WIN32)
+  set (SWIG_LIB bin/Lib)
+else ()
+  set (SWIG_LIB share/swig/${SWIG_VERSION})
+endif ()
 # Project wide configuration variables
 # ------------------------------------
 
@@ -80,14 +81,14 @@ if (WITH_PCRE)
   include_directories (${PCRE2_INCLUDE_DIRS})
 endif()
 
-if (WIN32)
-  file (TO_NATIVE_PATH ${CMAKE_INSTALL_PREFIX}/${SWIG_LIB} SWIG_LIB_WIN_UNIX)
-  string (REGEX REPLACE "\\\\" "\\\\\\\\" SWIG_LIB_WIN_UNIX "${SWIG_LIB_WIN_UNIX}")
-endif ()
+#if (WIN32)
+#  file (TO_NATIVE_PATH ${CMAKE_INSTALL_PREFIX}/${SWIG_LIB} SWIG_LIB_WIN_UNIX)
+#  string (REGEX REPLACE "\\\\" "\\\\\\\\" SWIG_LIB_WIN_UNIX "${SWIG_LIB_WIN_UNIX}")
+#endif ()
 configure_file (${SWIG_ROOT}/Tools/cmake/swigconfig.h.in
                 ${CMAKE_CURRENT_BINARY_DIR}/Source/Include/swigconfig.h)
 
-find_package (BISON REQUIRED)
+find_package (BISON 3.5 REQUIRED)
 
 
 # Compiler flags

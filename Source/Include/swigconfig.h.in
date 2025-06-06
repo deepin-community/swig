@@ -27,9 +27,6 @@
 /* Define if you have PCRE2 library */
 #undef HAVE_PCRE
 
-/* Define if popen is available */
-#undef HAVE_POPEN
-
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H
 

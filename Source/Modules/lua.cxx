@@ -269,9 +269,6 @@ public:
     /* Set language-specific configuration file */
     SWIG_config_file("lua.swg");
 
-    /* Set typemap language */
-    SWIG_typemap_lang("lua");
-
     /* Enable overloaded methods support */
     allow_overloading();
   }
@@ -516,7 +513,7 @@ public:
     String *iname = Getattr(n, "sym:name");
     String *lua_name = Getattr(n, "lua:name");
     assert(lua_name);
-    SwigType *d = Getattr(n, "type");
+    SwigType *returntype = Getattr(n, "type");
     ParmList *l = Getattr(n, "parms");
     Parm *p;
     String *tm;
@@ -746,9 +743,9 @@ public:
       Printf(f->code, "%s\n", tm);
       //      returnval++;
     } else {
-      Swig_warning(WARN_TYPEMAP_OUT_UNDEF, input_file, line_number, "Unable to use return type %s in function %s.\n", SwigType_str(d, 0), name);
+      Swig_warning(WARN_TYPEMAP_OUT_UNDEF, input_file, line_number, "Unable to use return type %s in function %s.\n", SwigType_str(returntype, 0), name);
     }
-    emit_return_variable(n, d, f);
+    emit_return_variable(n, returntype, f);
 
     /* Output argument output code */
     Printv(f->code, outarg, NIL);
@@ -782,6 +779,9 @@ public:
 
     /* Substitute the cleanup code */
     Replaceall(f->code, "$cleanup", cleanup);
+
+    bool isvoid = !Cmp(returntype, "void");
+    Replaceall(f->code, "$isvoid", isvoid ? "1" : "0");
 
     /* Substitute the function name */
     Replaceall(f->code, "$symname", iname);
@@ -914,7 +914,7 @@ public:
    * ------------------------------------------------------------ */
 
   void registerVariable(Node *n, bool overwrite = false, String *overwriteLuaScope = 0) {
-    int assignable = is_assignable(n);
+    int assignable = !is_immutable(n);
     String *symname = Getattr(n, "sym:name");
     assert(symname);
 
@@ -1050,8 +1050,7 @@ public:
       lua_name = iname;
     String *nsname = Copy(iname);
     SwigType *type = Getattr(n, "type");
-    String *rawval = Getattr(n, "rawval");
-    String *value = rawval ? rawval : Getattr(n, "value");
+    String *value = Getattr(n, "value");
     String *tm;
     String *lua_name_v2 = 0;
     String *tm_v2 = 0;
@@ -1269,12 +1268,12 @@ public:
       full_proxy_class_name = NewStringf("%s.%s", nspace, proxy_class_name);
 
     assert(full_proxy_class_name);
-    mangled_full_proxy_class_name = Swig_name_mangle(full_proxy_class_name);
+    mangled_full_proxy_class_name = Swig_name_mangle_string(full_proxy_class_name);
 
     SwigType *t = Copy(Getattr(n, "name"));
     SwigType *fr_t = SwigType_typedef_resolve_all(t);	/* Create fully resolved type */
     SwigType *t_tmp = 0;
-    t_tmp = SwigType_typedef_qualified(fr_t);	// Temporal variable
+    t_tmp = SwigType_typedef_qualified(fr_t);	// Temporary variable
     Delete(fr_t);
     fr_t = SwigType_strip_qualifiers(t_tmp);
     String *mangled_fr_t = 0;
@@ -1803,7 +1802,7 @@ public:
     if (nspace == 0 || Len(nspace) == 0)
       mangled_name = NewString("SwigModule");
     else
-      mangled_name = Swig_name_mangle(nspace);
+      mangled_name = Swig_name_mangle_string(nspace);
     String *cname = NewStringf("swig_%s", mangled_name);
 
     Setattr(carrays_hash, "cname", cname);
@@ -2122,7 +2121,7 @@ public:
       closeCArraysHash(key, dataOutput);
       Hash *carrays_hash = rawGetCArraysHash(key);
       String *name = 0;		// name - name of the namespace as it should be visible in Lua
-      if (DohLen(key) == 0)	// This is global module
+      if (Len(key) == 0)	// This is global module
 	name = module;
       else
 	name = Getattr(carrays_hash, "name");
