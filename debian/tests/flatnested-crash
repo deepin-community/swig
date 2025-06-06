@@ -20,10 +20,10 @@ struct Outer1::Nested2 {
 %}
 EOF
 
-swig4.0 -version
-swig4.0 -c++ -python nested_scope.i
+swig -version
+swig -c++ -python nested_scope.i
 echo "Wrapping for Python: okay"
-swig4.0 -c++ -ruby nested_scope.i
+swig -c++ -ruby nested_scope.i
 echo "Wrapping for Ruby: okay"
-swig4.0 -c++ -tcl nested_scope.i
+swig -c++ -tcl nested_scope.i
 echo "Wrapping for Tcl: okay"

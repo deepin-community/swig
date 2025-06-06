@@ -1,0 +1,6 @@
+# Quoting Doc/Manual/README:
+# All of this HTML is hand-written.  However, section numbering, indices,
+# and the table of contents are generated automatically by the 'maketoc.py'
+# script. The Makefile has further information on how the various alternative
+# forms of the documentation are generated from the hand-written HTML.
+swig source: source-is-missing [Doc/Manual/*.html]

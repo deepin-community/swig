@@ -12,6 +12,7 @@
  * ----------------------------------------------------------------------------- */
 
 #include "swig.h"
+#include <assert.h>
 #include <errno.h>
 #include <ctype.h>
 #include <limits.h>
@@ -353,10 +354,62 @@ int Swig_storage_isstatic(Node *n) {
  * Swig_string_escape()
  *
  * Takes a string object and produces a string with escape codes added to it.
- * Octal escaping is used.
+ * Octal escaping is used.  The result is used for literal strings and characters
+ * in C/C++ and also Java, Python, R and Ruby.
+ *
+ * The result is suitable for wrapping in single or double quotes to form a
+ * character or string literal.
+ *
+ * Note that it's not safe to concatenate the results of escaping two strings
+ * - you need to concatenate first and escape second.  The problem case is
+ * when the first string ends with a character which gets escaped using one or
+ * two octal digits and the second string starts with a character which is an
+ * octal digit.
  * ----------------------------------------------------------------------------- */
 
 String *Swig_string_escape(String *s) {
+  String *ns = NewStringEmpty();
+  int c = Getc(s);
+  while (c != EOF) {
+    if (c == '\n') {
+      Printf(ns, "\\n");
+    } else if (c == '\r') {
+      Printf(ns, "\\r");
+    } else if (c == '\t') {
+      Printf(ns, "\\t");
+    } else if (c == '\\') {
+      Printf(ns, "\\\\");
+    } else if (c == '\'') {
+      Printf(ns, "\\'");
+    } else if (c == '\"') {
+      Printf(ns, "\\\"");
+    } else if (c >= 32 && c < 127) {
+      Putc(c, ns);
+    } else {
+      int next_c = Getc(s);
+      assert(c >= 0);
+      if (next_c >= '0' && next_c < '8') {
+	/* We need to emit 3 octal digits. */
+	Printf(ns, "\\%03o", c);
+      } else {
+	Printf(ns, "\\%o", c);
+      }
+      c = next_c;
+      continue;
+    }
+    c = Getc(s);
+  }
+  return ns;
+}
+
+/* -----------------------------------------------------------------------------
+ * Swig_string_csharpescape()
+ *
+ * Takes a string object and produces a string with escape codes added to it
+ * suitable for use as a C# string or character literal.
+ * ----------------------------------------------------------------------------- */
+
+static String *Swig_string_csharpescape(String *s) {
   String *ns;
   int c;
   ns = NewStringEmpty();
@@ -374,27 +427,25 @@ String *Swig_string_escape(String *s) {
       Printf(ns, "\\'");
     } else if (c == '\"') {
       Printf(ns, "\\\"");
-    } else if (c == ' ') {
+    } else if (c >= 32 && c < 127) {
       Putc(c, ns);
-    } else if (!isgraph(c)) {
-      if (c < 0)
-	c += UCHAR_MAX + 1;
-      Printf(ns, "\\%o", c);
     } else {
-      Putc(c, ns);
+      assert(c >= 0);
+      // Emit 4 hex digits in case the next character is a hex digit.
+      Printf(ns, "\\x%04X", c);
     }
   }
   return ns;
 }
 
 /* -----------------------------------------------------------------------------
- * Swig_string_hexescape()
+ * Swig_string_goescape()
  *
- * Takes a string object and produces a string with escape codes added to it.
- * Hex escaping is used.
+ * Takes a string object and produces a string with escape codes added to it
+ * suitable for use as a Go string or character literal.
  * ----------------------------------------------------------------------------- */
 
-String *Swig_string_hexescape(String *s) {
+static String *Swig_string_goescape(String *s) {
   String *ns;
   int c;
   ns = NewStringEmpty();
@@ -408,18 +459,14 @@ String *Swig_string_hexescape(String *s) {
       Printf(ns, "\\t");
     } else if (c == '\\') {
       Printf(ns, "\\\\");
-    } else if (c == '\'') {
-      Printf(ns, "\\'");
-    } else if (c == '\"') {
-      Printf(ns, "\\\"");
-    } else if (c == ' ') {
+    } else if (c >= 32 && c < 127 && c != '\'' && c != '"') {
       Putc(c, ns);
-    } else if (!isgraph(c)) {
-      if (c < 0)
-	c += UCHAR_MAX + 1;
-      Printf(ns, "\\x%X", c);
     } else {
-      Putc(c, ns);
+      // In Go, \' isn't valid in a double quoted string, while \" isn't valid
+      // in a single quoted rune, so to avoid needing two different escaping
+      // functions we always escape both using hex escapes.
+      assert(c >= 0);
+      Printf(ns, "\\x%02x", c);
     }
   }
   return ns;
@@ -493,7 +540,7 @@ String *Swig_string_title(String *s) {
  *      camelCase  -> CamelCase
  * ----------------------------------------------------------------------------- */
 
-String *Swig_string_ccase(String *s) {
+static String *Swig_string_ccase(String *s) {
   String *ns;
   int first = 1;
   int c;
@@ -522,7 +569,7 @@ String *Swig_string_ccase(String *s) {
  *      CamelCase  -> camelCase
  * ----------------------------------------------------------------------------- */
 
-String *Swig_string_lccase(String *s) {
+static String *Swig_string_lccase(String *s) {
   String *ns;
   int first = 1;
   int after_underscore = 0;
@@ -556,7 +603,7 @@ String *Swig_string_lccase(String *s) {
  *      asFloat2  -> as_float2
  * ----------------------------------------------------------------------------- */
 
-String *Swig_string_ucase(String *s) {
+static String *Swig_string_ucase(String *s) {
   String *ns;
   int c;
   int lastC = 0;
@@ -605,7 +652,7 @@ String *Swig_string_ucase(String *s) {
  *      firstUpper -> FirstUpper 
  * ----------------------------------------------------------------------------- */
 
-String *Swig_string_first_upper(String *s) {
+static String *Swig_string_first_upper(String *s) {
   String *ns = NewStringEmpty();
   char *cs = Char(s);
   if (cs && cs[0] != 0) {
@@ -626,7 +673,7 @@ String *Swig_string_first_upper(String *s) {
  *      firstLower -> FirstLower 
  * ----------------------------------------------------------------------------- */
 
-String *Swig_string_first_lower(String *s) {
+static String *Swig_string_first_lower(String *s) {
   String *ns = NewStringEmpty();
   char *cs = Char(s);
   if (cs && cs[0] != 0) {
@@ -644,7 +691,7 @@ String *Swig_string_first_lower(String *s) {
  *      under_scores -> under-scores
  * ----------------------------------------------------------------------------- */
 
-String *Swig_string_schemify(String *s) {
+static String *Swig_string_schemify(String *s) {
   String *ns = NewString(s);
   Replaceall(ns, "_", "-");
   return ns;
@@ -657,7 +704,7 @@ String *Swig_string_schemify(String *s) {
  * real C datatypes.
  * ----------------------------------------------------------------------------- */
 
-String *Swig_string_typecode(String *s) {
+static String *Swig_string_typecode(String *s) {
   String *ns;
   int c;
   String *tc;
@@ -702,167 +749,8 @@ String *Swig_string_typecode(String *s) {
   return ns;
 }
 
-/* -----------------------------------------------------------------------------
- * Swig_string_mangle()
- * 
- * Take a string and mangle it by stripping all non-valid C identifier
- * characters.
- *
- * This routine skips unnecessary blank spaces, therefore mangling
- * 'char *' and 'char*', 'std::pair<int, int >' and
- * 'std::pair<int,int>', produce the same result.
- *
- * However, note that 'long long' and 'long_long' produce different
- * mangled strings.
- *
- * The mangling method still is not 'perfect', for example std::pair and
- * std_pair return the same mangling. This is just a little better
- * than before, but it seems to be enough for most of the purposes.
- *
- * Having a perfect mangling will break some examples and code which
- * assume, for example, that A::get_value will be mangled as
- * A_get_value. 
- * ----------------------------------------------------------------------------- */
-
-String *Swig_string_mangle(const String *s) {
-#if 0
-  /* old mangling, not suitable for using in macros */
-  String *t = Copy(s);
-  char *c = Char(t);
-  while (*c) {
-    if (!isalnum(*c))
-      *c = '_';
-    c++;
-  }
-  return t;
-#else
-  String *result = NewStringEmpty();
-  int space = 0;
-  int state = 0;
-  char *pc, *cb;
-  String *b = Copy(s);
-  if (SwigType_istemplate(b)) {
-    String *st = Swig_symbol_template_deftype(b, 0);
-    String *sq = Swig_symbol_type_qualify(st, 0);
-    String *t = SwigType_namestr(sq);
-    Delete(st);
-    Delete(sq);
-    Delete(b);
-    b = t;
-  }
-  pc = cb = Char(b);
-  while (*pc) {
-    char c = *pc;
-    if (isalnum((int) c) || (c == '_')) {
-      state = 1;
-      if (space && (space == state)) {
-	Append(result, "_SS_");
-      }
-      space = 0;
-      Printf(result, "%c", (int) c);
-
-    } else {
-      if (isspace((int) c)) {
-	space = state;
-	++pc;
-	continue;
-      } else {
-	state = 3;
-	space = 0;
-      }
-      switch (c) {
-      case '.':
-	if ((cb != pc) && (*(pc - 1) == 'p')) {
-	  Append(result, "_");
-	  ++pc;
-	  continue;
-	} else {
-	  c = 'f';
-	}
-	break;
-      case ':':
-	if (*(pc + 1) == ':') {
-	  Append(result, "_");
-	  ++pc;
-	  ++pc;
-	  continue;
-	}
-	break;
-      case '*':
-	c = 'm';
-	break;
-      case '&':
-	c = 'A';
-	break;
-      case '<':
-	c = 'l';
-	break;
-      case '>':
-	c = 'g';
-	break;
-      case '=':
-	c = 'e';
-	break;
-      case ',':
-	c = 'c';
-	break;
-      case '(':
-	c = 'p';
-	break;
-      case ')':
-	c = 'P';
-	break;
-      case '[':
-	c = 'b';
-	break;
-      case ']':
-	c = 'B';
-	break;
-      case '^':
-	c = 'x';
-	break;
-      case '|':
-	c = 'o';
-	break;
-      case '~':
-	c = 'n';
-	break;
-      case '!':
-	c = 'N';
-	break;
-      case '%':
-	c = 'M';
-	break;
-      case '?':
-	c = 'q';
-	break;
-      case '+':
-	c = 'a';
-	break;
-      case '-':
-	c = 's';
-	break;
-      case '/':
-	c = 'd';
-	break;
-      default:
-	break;
-      }
-      if (isalpha((int) c)) {
-	Printf(result, "_S%c_", (int) c);
-      } else {
-	Printf(result, "_S%02X_", (int) c);
-      }
-    }
-    ++pc;
-  }
-  Delete(b);
-  return result;
-#endif
-}
-
-String *Swig_string_emangle(String *s) {
-  return Swig_string_mangle(s);
+static String *string_mangle(String *s) {
+  return Swig_name_mangle_string(s);
 }
 
 
@@ -1144,6 +1032,28 @@ List *Swig_scopename_tolist(const String *s) {
 }
 
 /* -----------------------------------------------------------------------------
+ * Swig_scopename_isvalid()
+ *
+ * Checks that s is a valid scopename (C++ namespace scope)
+ * ----------------------------------------------------------------------------- */
+
+int Swig_scopename_isvalid(const String *s) {
+  List *scopes = Swig_scopename_tolist(s);
+  int valid = 0;
+  Iterator si;
+
+  for (si = First(scopes); si.item; si = Next(si)) {
+    String *subscope = si.item;
+    valid = subscope && Len(subscope) > 0;
+    if (valid)
+      valid = Swig_symbol_isvalid(subscope);
+    if (!valid)
+      break;
+  }
+  return valid;
+}
+
+/* -----------------------------------------------------------------------------
  * Swig_scopename_check()
  *
  * Checks to see if a name is qualified with a scope name, examples:
@@ -1191,8 +1101,8 @@ int Swig_scopename_check(const String *s) {
  * Feature removed in SWIG 4.1.0.
  * ----------------------------------------------------------------------------- */
 
-String *Swig_string_command(String *s) {
-  Swig_error("SWIG", Getline(s), "Command encoder no longer supported - use regex encoder instead.\n");
+static String *Swig_string_command(String *s) {
+  Swig_error("SWIG", Getline(s), "Command encoder no longer supported - use regex encoder instead, command:%s\n", s);
   Exit(EXIT_FAILURE);
   return 0;
 }
@@ -1205,7 +1115,7 @@ String *Swig_string_command(String *s) {
  *  Printf(stderr,"%(strip:[wx])s","wxHello") -> Hello
  * ----------------------------------------------------------------------------- */
 
-String *Swig_string_strip(String *s) {
+static String *Swig_string_strip(String *s) {
   String *ns;
   if (!Len(s)) {
     ns = NewString(s);
@@ -1235,7 +1145,7 @@ String *Swig_string_strip(String *s) {
  *  Printf(stderr,"%(rstrip:[Cls])s","HelloCls") -> Hello
  * ----------------------------------------------------------------------------- */
 
-String *Swig_string_rstrip(String *s) {
+static String *Swig_string_rstrip(String *s) {
   String *ns;
   int len = Len(s);
   if (!len) {
@@ -1375,7 +1285,7 @@ static void copy_with_maybe_case_conversion(String *dst, const char *src, int le
   }
 }
 
-String *replace_captures(int num_captures, const char *input, String *subst, size_t captures[], String *pattern, String *s)
+static String *replace_captures(int num_captures, const char *input, String *subst, size_t captures[], String *pattern, String *s)
 {
   int convertCase = 0, convertNextOnly = 0;
   String *result = NewStringEmpty();
@@ -1445,7 +1355,7 @@ String *replace_captures(int num_captures, const char *input, String *subst, siz
  *
  *   Printf(stderr,"gsl%(regex:/GSL_(.*)_/\\1/)s", "GSL_Hello_") -> gslHello
  * ----------------------------------------------------------------------------- */
-String *Swig_string_regex(String *s) {
+static String *Swig_string_regex(String *s) {
   const int pcre_options = 0;
 
   String *res = 0;
@@ -1480,8 +1390,8 @@ String *Swig_string_regex(String *s) {
     }
   }
 
-  DohDelete(pattern);
-  DohDelete(subst);
+  Delete(pattern);
+  Delete(subst);
   pcre2_code_free(compiled_pat);
   pcre2_match_data_free(match_data);
   return res ? res : NewStringEmpty();
@@ -1516,10 +1426,33 @@ String *Swig_pcre_version(void) {
  * Check if the function is an automatically generated
  * overload created because a method has default parameters. 
  * ------------------------------------------------------------ */
+
 int Swig_is_generated_overload(Node *n) {
   Node *base_method = Getattr(n, "sym:overloaded");
   Node *default_args = Getattr(n, "defaultargs");
   return ((base_method != NULL) && (default_args != NULL) && (base_method == default_args));
+}
+
+/* -----------------------------------------------------------------------------
+ * Swig_item_in_list()
+ *
+ * If the input item is in the list, return the item.
+ * Note: uses DohCmp for comparisons so for a List of String *, Strcmp is ultimately
+ * used for item comparisons to determine if a string is in the list.
+ * ----------------------------------------------------------------------------- */
+
+Node *Swig_item_in_list(List *list, const DOH *item) {
+  Node *found_item = 0;
+  if (list) {
+    Iterator it;
+    for (it = First(list); it.item; it = Next(it)) {
+      if (DohCmp(item, it.item) == 0) {
+	found_item = it.item;
+	break;
+      }
+    }
+  }
+  return found_item;
 }
 
 /* -----------------------------------------------------------------------------
@@ -1531,7 +1464,8 @@ int Swig_is_generated_overload(Node *n) {
 void Swig_init(void) {
   /* Set some useful string encoding methods */
   DohEncoding("escape", Swig_string_escape);
-  DohEncoding("hexescape", Swig_string_hexescape);
+  DohEncoding("csharpescape", Swig_string_csharpescape);
+  DohEncoding("goescape", Swig_string_goescape);
   DohEncoding("upper", Swig_string_upper);
   DohEncoding("lower", Swig_string_lower);
   DohEncoding("title", Swig_string_title);
@@ -1539,7 +1473,7 @@ void Swig_init(void) {
   DohEncoding("lctitle", Swig_string_lccase);
   DohEncoding("utitle", Swig_string_ucase);
   DohEncoding("typecode", Swig_string_typecode);
-  DohEncoding("mangle", Swig_string_emangle);
+  DohEncoding("mangle", string_mangle);
   DohEncoding("command", Swig_string_command);
   DohEncoding("schemify", Swig_string_schemify);
   DohEncoding("strip", Swig_string_strip);

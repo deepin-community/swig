@@ -1,122 +1,25 @@
 #!/usr/bin/make -f
-# Sample debian/rules that uses debhelper. GNU copyright 1997 by Joey Hess.
-# This version is for a hypothetical package that builds an
-# architecture-dependant package, as well as an architecture-independent
-# package.
 
-# Uncomment this to turn on verbose mode.
-#export DH_VERBOSE=1
+%:
+	dh $@ --buildsystem=autoconf
 
-# Support building from Subversion repository
-export DH_ALWAYS_EXCLUDE=.svn
-
-DPKG_EXPORT_BUILDFLAGS = 1
-include /usr/share/dpkg/buildflags.mk
-include /usr/share/dpkg/architecture.mk
-
-# XXX: patch to pike detection submitted upstream, need to adapt
-# configure args
-MAKEOPTS =
-CONFIGURE_ARGS := \
-	--prefix=/usr --mandir=/usr/share/man	\
-	--with-swiglibdir=/usr/share/swig4.0		\
-    --program-suffix=4.0
-
-NO_PACKAGES :=
-
-configure-stamp: $(QUILT_STAMPFN)
-	dh_testdir
+override_dh_autoreconf:
 	dh_autoreconf ./autogen.sh
-	dh_auto_configure --builddirectory=builddir -- $(CONFIGURE_ARGS)
 
-	# Workaround: Enforce rebuilding the bison parser and ensure that the
-	# build directory (where generated sources are put) exists.
-	cd builddir && mkdir -p Source/CParse
-	touch Source/CParse/parser.y
+# This is a workaround while we make the unit tests work in a reasonable way
+override_dh_auto_test:
 
-	touch configure-stamp
+override_dh_installchangelogs:
+	dh_installchangelogs -XCHANGES
 
-build: build-indep build-arch
+override_dh_compress:
+	dh_compress -Xswig-examples/examples
 
-build-indep:	build-stamp
-build-arch:	build-stamp
+examples_dir = debian/swig-examples/usr/share/doc/swig-examples/examples
 
-build-stamp: configure-stamp
-	dh_testdir
-	cd builddir && $(MAKE) $(MAKEOPTS)
-
-	touch build-stamp
-
-clean:
-	dh_testdir
-	dh_testroot
-	rm -f configure-stamp build-stamp install-stamp
-	rm -rf builddir
-	dh_autoreconf_clean
-	dh_clean
-
-install: install-stamp
-install-stamp: build-stamp
-	dh_testdir
-	dh_testroot
-	dh_prep
-	dh_installdirs
-
-	cd builddir && $(MAKE) $(MAKEOPTS) DESTDIR=$(CURDIR)/debian/swig4.0 install
-
-	touch install-stamp
-
-# Build architecture-independent files here.
-# We don't need a dependency on build or install since these are the plain
-# documentation files as included in the distribution.
-binary-indep:
-	dh_testdir
-	dh_testroot
-	dh_prep -i
-	dh_installdirs -i
-	dh_installdocs -i
-	dh_installexamples -i
-	cd debian/swig4.0-examples/usr/share/doc/swig4.0-examples && mv examples/* . && rmdir examples
-	cp debian/swig4.0-examples.override debian/swig4.0-examples/usr/share/lintian/overrides/swig4.0-examples
-	perl -pi -e 's,^SWIG.*=.*$$,SWIG      = swig,' \
-		`find debian/swig4.0-examples/usr/share/doc/swig4.0-examples -name Makefile`
-	dh_installchangelogs -i
-	dh_link -i
-	dh_compress -i -X.pdf
-	dh_fixperms -i
-	dh_installdeb -i
-	dh_gencontrol -i
-	dh_md5sums -i
-	dh_builddeb -i
-
-# Build architecture-dependent files here.
-binary-arch: build install
-	dh_testdir
-	dh_testroot
-	dh_installdocs -a $(NO_PACKAGES_ARGS) README
-	dh_installexamples -a $(NO_PACKAGES_ARGS)
-	dh_installmenu -a $(NO_PACKAGES_ARGS)
-#	dh_installemacsen -a $(NO_PACKAGES_ARGS)
-#	dh_installinit -a $(NO_PACKAGES_ARGS)
-	dh_installcron -a $(NO_PACKAGES_ARGS)
-	dh_installman -p swig4.0 debian/swig4.0.1
-	dh_install -a --sourcedir=$(CURDIR)
-#	dh_undocumented
-	dh_installchangelogs -a -Nswig4.0 $(NO_PACKAGES_ARGS) CHANGES
-	dh_installchangelogs -pswig4.0 $(NO_PACKAGES_ARGS)
-	dh_compress -a $(NO_PACKAGES_ARGS) -X.pdf
-	dh_link -a $(NO_PACKAGES_ARGS)
-	dh_strip -a $(NO_PACKAGES_ARGS)
-	dh_fixperms -a $(NO_PACKAGES_ARGS)
-	dh_makeshlibs -a $(NO_PACKAGES_ARGS)
-	dh_installdeb -a $(NO_PACKAGES_ARGS)
-	dh_shlibdeps -a $(NO_PACKAGES_ARGS)
-	dh_gencontrol -a $(NO_PACKAGES_ARGS)
-	dh_md5sums -a $(NO_PACKAGES_ARGS)
-	dh_builddeb -a $(NO_PACKAGES_ARGS)
-
-source diff:
-	@echo >&2 'source and diff are obsolete - use dpkg-source -b'; false
-
-binary: binary-indep binary-arch
-.PHONY: build clean binary-indep binary-arch binary install
+execute_after_dh_installdeb:
+	rm -rf $(examples_dir)/test-suite
+	if [ -f $(examples_dir)/Makefile ] ; then	\
+	    sed -i -e 's/^ROOT_DIR =.*/ROOT_DIR = ./'	\
+	        $(examples_dir)/Makefile ; 		\
+	fi
